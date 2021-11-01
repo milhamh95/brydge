@@ -1,6 +1,8 @@
 package handler
 
-type Request struct {
+import "context"
+
+type request struct {
 	TrxId          string `json:"trxId"`
 	Origin         string `json:"origin"`
 	CustomerNumber string `json:"customerNumber"`
@@ -23,10 +25,10 @@ type Request struct {
 	DenomAmount    int    `json:"denomAmount,omitempty"`
 
 	InquiryUrl string      `json:"inquiryUrl"`
-	ExtValue   []ExtraData `json:"extraData"`
+	ExtValue   []extraData `json:"extraData"`
 }
 
-type Response struct {
+type response struct {
 	TrxId                string      `json:"trxId"`
 	Origin               string      `json:"origin"`
 	Destination          string      `json:"destination"`
@@ -36,12 +38,16 @@ type Response struct {
 	PaymentAmount        int         `json:"paymentAmount"`
 	DenomAmount          interface{} `json:"denomAmount,omitempty"`
 
-	ExtraData []ExtraData `json:"extraData,omitempty"`
+	ExtraData []extraData `json:"extraData,omitempty"`
 }
 
 // ExtraData is an extra data for smartbiller
-type ExtraData struct {
+type extraData struct {
 	Key    string `json:"key"`
 	Value  string `json:"value"`
 	IsCopy bool   `json:"isCopy,omitempty"`
+}
+
+type useCase interface {
+	Inquiry(ctx context.Context)
 }
