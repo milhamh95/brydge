@@ -10,6 +10,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 
+	confirmHandler "github.com/milhamh95/brydge/internal/app/confirm/handler"
 	inquiryHandler "github.com/milhamh95/brydge/internal/app/inquiry/handler"
 	kafkaPkg "github.com/milhamh95/brydge/pkg/kafka"
 )
@@ -61,6 +62,9 @@ func (a *App) Start() {
 
 	inquiryPubSub := inquiryHandler.NewPubsub(nil, "kafka-inquiry-requested")
 	go inquiryPubSub.StartSubscribe(inquiryMessages, 10)
+
+	confirmSubscriber := confirmHandler.NewSubscriber(nil, kafkaPubsub, "kafka-confirm-requested")
+	go confirmSubscriber.StartSubscribe(10)
 
 	go func() {
 		err := e.Start(":8000")
